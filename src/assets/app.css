@@ -1,0 +1,5 @@
+.ellipsis {
+    white-space: nowrap; /* 使文本不可换行 */
+    overflow: hidden; /* 隐藏溢出部分 */
+    text-overflow: ellipsis; /* 显示省略符号来代表被隐藏的文本 */
+}
