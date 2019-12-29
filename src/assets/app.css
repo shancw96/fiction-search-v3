@@ -84,3 +84,8 @@
 .bgGrey {
     background-color: #dfe4ea;
 }
+
+.subTitle {
+    font-size: 18px;
+    padding-bottom: 10px;
+}

@@ -3,11 +3,7 @@
         <van-row>
             <van-col span="4">
                 <van-dropdown-menu>
-                    <van-dropdown-item
-                        v-model="accurateSearch"
-                        :options="websiteName"
-                        @change="dropDownChange"
-                    />
+                    <van-dropdown-item v-model="accurateSearch" :options="websiteName" @change="dropDownChange" />
                 </van-dropdown-menu>
             </van-col>
             <van-search
@@ -33,6 +29,7 @@
                             :title="item.title"
                             :desc="item.author"
                             :chapterList="item.chapterList"
+                            :bookHome="item.bookHome"
                             :hasSideCount="true"
                         />
                     </van-row>

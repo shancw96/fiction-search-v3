@@ -9,34 +9,24 @@
         >
         <van-col style="margin:5px" span="4">
             <div class="imgWrapper">
-                <img
-                    :src="
-                        !!imgSrc
-                            ? imgSrc
-                            : 'https://i.loli.net/2019/12/29/Kjel2kduwQArxBR.jpg'
-                    "
-                />
+                <img :src="!!imgSrc ? imgSrc : 'https://i.loli.net/2019/12/29/Kjel2kduwQArxBR.jpg'" />
             </div>
         </van-col>
         <van-col span="16">
             <van-row style="font-weight:bold;font-size:18px">{{ title }}</van-row>
-            <van-row
-                class="ellipsis"
-                style="font-size:14px;color:#ced6e0;margin-top:5px"
-                >{{ desc }}</van-row
-            >
+            <van-row class="ellipsis" style="font-size:14px;color:#ced6e0;margin-top:5px">{{ desc }}</van-row>
         </van-col>
     </van-row>
 </template>
 <script>
 export default {
-    props: ["imgSrc", "title", "desc", "index", "hasSideCount", "chapterList"],
+    props: ["imgSrc", "title", "desc", "index", "hasSideCount", "chapterList", "bookHome"],
     data() {
         return {};
     },
     methods: {
         toBookDetail() {
-            this.$router.push({ name: "fiction_home" });
+            this.$router.push({ name: "fiction_home", query: { link: this.bookHome } });
         }
     }
 };

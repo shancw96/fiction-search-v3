@@ -15,3 +15,11 @@ export const fetchSearchKeyword = (keyword, accurateSearch) =>
             accurateSearch
         }
     });
+export const fetchBookHome = url =>
+    request({
+        url: "fiction/bookHome",
+        method: "get",
+        params: {
+            url
+        }
+    });
