@@ -14,8 +14,6 @@
 export default {
     methods: {
         jumpToSearch() {
-            //   this.$router.push({ name: "V2_search" });
-            // this.$router.push({ name: "fiction_search" });
             this.$router.push({ name: "fiction_search" });
         }
     }

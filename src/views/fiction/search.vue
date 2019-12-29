@@ -32,21 +32,22 @@
                             :imgSrc="item.img"
                             :title="item.title"
                             :desc="item.author"
+                            :chapterList="item.chapterList"
+                            :hasSideCount="true"
                         />
                     </van-row>
                 </van-tab>
             </van-tabs>
         </section>
         <section v-if="showRecommand" class="contentWrapper">
-            <label style="font-size:16px;color:#dfe4ea;padding-left:10px">
-                热搜榜：</label
-            >
+            <div style="font-size:16px;color:#f9ca24;padding:10px">热搜榜</div>
             <van-row v-for="(item, index) in recommandList" :key="index">
                 <FicitonCard
                     :index="index"
                     :imgSrc="item.img"
                     :title="item.title"
                     :desc="item.desc"
+                    :chapterList="item.chapterList"
                     :hasSideCount="true"
                 />
             </van-row>
@@ -69,7 +70,7 @@ export default {
                 { text: "全局", value: "all" },
                 { text: "文桑", value: "wensang" },
                 { text: "2k小说", value: "twoK" },
-                { text: "biquge", value: "biquge" }
+                { text: "笔趣阁", value: "biquge" }
             ],
             accurateSearch: "all",
             searchList: [],

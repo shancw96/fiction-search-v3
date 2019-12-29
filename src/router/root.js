@@ -22,6 +22,11 @@ const routes = [
                 path: "search",
                 name: "fiction_search",
                 component: () => import("../views/fiction/search.vue")
+            },
+            {
+                path: "home",
+                name: "fiction_home",
+                component: () => import("../views/fiction/book_home.vue")
             }
         ]
     },

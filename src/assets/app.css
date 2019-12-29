@@ -3,3 +3,84 @@
     overflow: hidden; /* 隐藏溢出部分 */
     text-overflow: ellipsis; /* 显示省略符号来代表被隐藏的文本 */
 }
+.pd5 {
+    padding: 5px;
+}
+
+.pd10 {
+    padding: 10px;
+}
+.pd15 {
+    padding: 15px;
+}
+.pdTop10 {
+    padding-top: 10px;
+}
+.pdTop20 {
+    padding-top: 20px;
+}
+.pdTop30 {
+    padding-top: 30px;
+}
+.margin10 {
+    margin: 10px;
+}
+.marginTop5 {
+    margin-top: 5px;
+}
+.marginTop10 {
+    margin-top: 20px;
+}
+.marginTop20 {
+    margin-top: 20px;
+}
+.marginTop15 {
+    margin-top: 15px;
+}
+.marginTop30 {
+    margin-top: 30px;
+}
+
+.textLeft {
+    text-align: left;
+}
+.textCenter {
+    text-align: center;
+}
+.textRight {
+    text-align: right;
+}
+.border-box {
+    box-sizing: border-box;
+}
+.roundCorner {
+    border-radius: 5px;
+    box-shadow: 5px 5px 5px #c9c8c8;
+}
+
+.grey {
+    color: #aaa;
+}
+.font10 {
+    font-size: 10px;
+}
+.font12 {
+    font-size: 12px;
+}
+
+.font14 {
+    font-size: 14px;
+}
+.font18 {
+    font-size: 18px;
+}
+.font20 {
+    font-size: 20px;
+}
+.bold {
+    font-weight: bold;
+}
+
+.bgGrey {
+    background-color: #dfe4ea;
+}

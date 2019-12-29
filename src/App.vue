@@ -1,5 +1,5 @@
 <template>
     <div id="app">
-        <router-view style="animation-duration: 0.4s" />
+        <router-view />
     </div>
 </template>

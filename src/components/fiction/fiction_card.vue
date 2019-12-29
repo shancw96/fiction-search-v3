@@ -1,5 +1,5 @@
 <template>
-    <van-row class="fictionWrapper">
+    <van-row class="fictionWrapper" @click="toBookDetail">
         <van-col
             v-if="!!hasSideCount"
             span="2"
@@ -9,7 +9,13 @@
         >
         <van-col style="margin:5px" span="4">
             <div class="imgWrapper">
-                <img :src="!!imgSrc ? imgSrc : 'https://img.yzcdn.cn/vant/cat.jpeg'" />
+                <img
+                    :src="
+                        !!imgSrc
+                            ? imgSrc
+                            : 'https://i.loli.net/2019/12/29/Kjel2kduwQArxBR.jpg'
+                    "
+                />
             </div>
         </van-col>
         <van-col span="16">
@@ -24,9 +30,14 @@
 </template>
 <script>
 export default {
-    props: ["imgSrc", "title", "desc", "index", "hasSideCount"],
+    props: ["imgSrc", "title", "desc", "index", "hasSideCount", "chapterList"],
     data() {
         return {};
+    },
+    methods: {
+        toBookDetail() {
+            this.$router.push({ name: "fiction_home" });
+        }
     }
 };
 </script>
