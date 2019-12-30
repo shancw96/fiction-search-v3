@@ -27,6 +27,16 @@ const routes = [
                 path: "home",
                 name: "fiction_home",
                 component: () => import("../views/fiction/book_home.vue")
+            },
+            {
+                path: "chapterList",
+                name: "fiction_chapterList",
+                component: () => import("../components/fiction/chapterList.vue")
+            },
+            {
+                path: "content",
+                name: "fiction_content",
+                component: () => import("../views/fiction/book_content.vue")
             }
         ]
     },

@@ -21,24 +21,27 @@
             <van-row class="  row2 border-box marginTop10 " type="flex" justify="space-around">
                 <van-col span="6"><van-button plain style="width:100%;margin:0 auto">加入书架</van-button></van-col>
                 <van-col span="10"
-                    ><van-button type="primary" style="width:100%;margin:0 auto">开始阅读</van-button></van-col
+                    ><van-button type="primary" style="width:100%;margin:0 auto" @click="toContent"
+                        >开始阅读</van-button
+                    ></van-col
                 >
                 <van-col span="6"><van-button plain style="width:100%;margin:0 auto">离线下载</van-button></van-col>
             </van-row>
         </CellContainer>
 
-        <CellContainer class="marginTop15 grey">
+        <CellContainer class="marginTop15 ">
             <van-row><div class="subTitle">小说简介</div></van-row>
-            <TextEllipsis :article="this.bookInfo.desc" />
+            <TextEllipsis class="grey" :article="this.bookInfo.desc" />
         </CellContainer>
 
-        <CellContainer class="marginTop15">
+        <CellContainer class="marginTop15" @click.native="toChapterList">
             <Cell textL="查看目录" textR="更新于下午sss" />
         </CellContainer>
 
         <CellContainer class="marginTop15 ">
-            <van-row><div class="subTitle grey">小说预览</div></van-row>
-            <TextEllipsis :article="this.bookInfo.desc" class="grey" />
+            <van-row><div class="subTitle ">小说预览</div></van-row>
+            <van-row><div class=" grey">第一章</div></van-row>
+            <TextEllipsis :article="this.chapterPreview" :isHmtl="true" class="grey font12" />
         </CellContainer>
     </article>
 </template>
@@ -49,7 +52,7 @@ import CellContainer from "../../components/common/cell_container";
 import Img from "../../components/common/image";
 import { getHostName } from "../../../utils/common";
 
-import { fetchBookHome } from "../../api/fiction";
+import { fetchBookHome, fetchBookChapterList, fetchBookContent } from "../../api/fiction";
 export default {
     components: {
         TextEllipsis,
@@ -59,20 +62,39 @@ export default {
     },
     data() {
         return {
-            bookInfo: {}
+            bookInfo: {},
+            chapterPreview: "",
+            firstChapterInfo: ""
         };
     },
     methods: {
         getHost() {
             return getHostName(this.$route.query.link);
+        },
+        toContent() {
+            if (!this.firstChapterInfo) {
+                this.$toast("正在加载中，请稍后再试");
+            } else {
+                this.$router.push({ name: "fiction_content", query: { link: this.firstChapterInfo.href } });
+            }
+        },
+        toChapterList() {
+            this.$router.push({
+                name: "fiction_chapterList",
+                query: { link: this.bookInfo.chapterList ? this.bookInfo.chapterList : this.$route.query.link }
+            });
+        },
+        async fetchContainer() {
+            const res = await fetchBookHome(this.$route.query.link);
+            this.bookInfo = { ...res, chapterList: res.chapterList ? res.chapterList : this.$route.query.link };
+            const bookList = await fetchBookChapterList(this.bookInfo.chapterList);
+            this.firstChapterInfo = bookList[0];
+            const { text } = await fetchBookContent(bookList[0].href);
+            this.chapterPreview = text;
         }
     },
     mounted() {
-        // console.log(this.$route.query);
-        fetchBookHome(this.$route.query.link).then(res => {
-            this.bookInfo = { ...res };
-            console.log(this.bookInfo);
-        });
+        this.fetchContainer();
     }
 };
 </script>

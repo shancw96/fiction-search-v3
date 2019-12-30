@@ -1,7 +1,8 @@
 <template>
-    <article :class="[isShowing ? '' : 'textElliplise']" @click="changeShowing">
-        {{ !!article ? article : "loading" }}
-    </article>
+    <section>
+        {{ !!article ? "" : "loading..." }}
+        <article :class="[isShowing ? '' : 'textElliplise']" @click="changeShowing" v-html="article"></article>
+    </section>
 </template>
 
 <script>
@@ -24,7 +25,7 @@ export default {
 .textElliplise {
     display: -webkit-box;
     -webkit-box-orient: vertical;
-    -webkit-line-clamp: 6;
+    -webkit-line-clamp: 10;
     overflow: hidden;
 }
 </style>

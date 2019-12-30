@@ -16,10 +16,11 @@
         </van-row>
         <van-loading size="24px" v-if="isLoading">加载中...</van-loading>
         <section v-if="!isLoading && !showRecommand">
-            <van-tabs animated swipeable>
+            <section v-if="!searchList.length">empty</section>
+            <van-tabs v-else animated swipeable>
                 <van-tab
                     v-for="(fictionArr, index) in searchList"
-                    :title="getHostName(fictionArr[0].chapterList)"
+                    :title="getHostName(fictionArr[0] ? fictionArr[0].chapterList : '')"
                     :key="index"
                 >
                     <van-row v-for="(item, index) in fictionArr" :key="index">
@@ -46,6 +47,7 @@
                     :desc="item.desc"
                     :chapterList="item.chapterList"
                     :hasSideCount="true"
+                    :bookHome="item.href"
                 />
             </van-row>
         </section>
@@ -54,7 +56,7 @@
 <script>
 import { fetchRecommand, fetchSearchKeyword } from "../../api/fiction";
 import FicitonCard from "../../components/fiction/fiction_card";
-import { isEmpty, getHostName } from "../../../utils/common";
+import { isEmpty } from "../../../utils/common";
 export default {
     components: {
         FicitonCard
@@ -85,6 +87,7 @@ export default {
         },
         async getRecommand() {
             let res = await fetchRecommand();
+            console.log(res);
             return res.slice(0, 10);
         },
         //onSearch ::keyword -> list
@@ -95,20 +98,20 @@ export default {
                 this.showRecommand = false;
                 this.isLoading = true;
                 fetchSearchKeyword(this.keyword, this.accurateSearch).then(res => {
-                    this.searchList = res;
-                    console.log(this.searchList);
+                    this.searchList = res.filter(list => !!list.length);
                     this.isLoading = false;
                 });
             }
         },
         getHostName(website) {
+            if (!website) return "undefined";
             const dictionary = {
                 wensang: "文桑",
                 fpzw: "2k小说",
                 biquge: "笔趣阁"
             };
             return dictionary[website.match(/(w+)(\.)([a-z]+)(\.)(com)/)[3]];
-        } // ['www.xxx.com','www','.','xxx','.'.'com',.....]
+        }
     },
     mounted() {
         this.getRecommand().then(res => (this.recommandList = res));
