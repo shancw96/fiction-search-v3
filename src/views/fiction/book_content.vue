@@ -67,6 +67,9 @@ export default {
     },
     updated() {
         // document.removeEventListener("scroll", this.listenScroll);
+    },
+    beforeDestroy() {
+        document.removeEventListener("scroll", this.listenScroll);
     }
 };
 </script>

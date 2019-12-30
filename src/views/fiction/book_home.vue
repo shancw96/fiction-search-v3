@@ -1,49 +1,60 @@
 <template>
-    <article class=" border-box bgGrey" style="padding:  5px;min-height:100vh ">
-        <CellContainer style="overflow:hidden">
-            <van-row class="textCenter border-box "
-                ><div class="pd10 font20 bold">{{ bookInfo.title }}</div></van-row
-            >
-            <van-row class="row1" type="flex" justify="space-between">
-                <van-col span="6">
-                    <Img :imgSrc="bookInfo.img" />
-                </van-col>
-                <van-col span="17" class="pd10" style="color: rgb(90, 89, 89);">
-                    <van-row class="font18 marginTop5">作者：{{ bookInfo.author }}</van-row>
-                    <van-row class="font18 marginTop5">来源：{{ getHost(this.$route.query.link) }}</van-row>
-                    <van-row class="marginTop10" type="flex" justify="flex-start">
-                        <van-col v-for="(item, index) in bookInfo.tags" :key="index" style="margin-left:5px">
-                            <van-tag plain type="success">{{ item }}</van-tag>
-                        </van-col>
-                    </van-row>
-                </van-col>
-            </van-row>
-            <van-row class="  row2 border-box marginTop10 " type="flex" justify="space-around">
-                <van-col span="6"><van-button plain style="width:100%;margin:0 auto">加入书架</van-button></van-col>
-                <van-col span="10"
-                    ><van-button type="primary" style="width:100%;margin:0 auto" @click="toContent"
-                        >开始阅读</van-button
-                    ></van-col
+    <section>
+        <article class=" border-box bgGrey" style="padding:  5px;min-height:100vh " v-if="!isLoadingBasic">
+            <CellContainer style="overflow:hidden">
+                <van-row class="textCenter border-box "
+                    ><div class="pd10 font20 bold">{{ bookInfo.title }}</div></van-row
                 >
-                <van-col span="6"><van-button plain style="width:100%;margin:0 auto">离线下载</van-button></van-col>
-            </van-row>
-        </CellContainer>
+                <van-row class="row1" type="flex" justify="space-between">
+                    <van-col span="6">
+                        <Img :imgSrc="bookInfo.img" />
+                    </van-col>
+                    <van-col span="17" class="pd10" style="color: rgb(90, 89, 89);">
+                        <van-row class="font18 marginTop5">作者：{{ bookInfo.author }}</van-row>
+                        <van-row class="font18 marginTop5">来源：{{ getHost(this.$route.query.link) }}</van-row>
+                        <van-row class="marginTop10" type="flex" justify="flex-start">
+                            <van-col v-for="(item, index) in bookInfo.tags" :key="index" style="margin-left:5px">
+                                <van-tag plain type="success">{{ item }}</van-tag>
+                            </van-col>
+                        </van-row>
+                    </van-col>
+                </van-row>
+                <van-row class="  row2 border-box marginTop10 " type="flex" justify="space-around">
+                    <van-col span="7"
+                        ><van-button plain style="width:100%;margin:0 auto" class="ellipsis" @click="addToBookShelf"
+                            >加入书架</van-button
+                        ></van-col
+                    >
+                    <van-col span="8"
+                        ><van-button type="primary" style="width:100%;margin:0 auto;" @click="toContent"
+                            >开始阅读</van-button
+                        ></van-col
+                    >
+                    <van-col span="7"
+                        ><van-button plain style="width:100%;margin:0 auto" class="ellipsis"
+                            >离线下载</van-button
+                        ></van-col
+                    >
+                </van-row>
+            </CellContainer>
 
-        <CellContainer class="marginTop15 ">
-            <van-row><div class="subTitle">小说简介</div></van-row>
-            <TextEllipsis class="grey" :article="this.bookInfo.desc" />
-        </CellContainer>
+            <CellContainer class="marginTop15 ">
+                <van-row><div class="subTitle">小说简介</div></van-row>
+                <TextEllipsis class="grey" :article="this.bookInfo.desc" />
+            </CellContainer>
 
-        <CellContainer class="marginTop15" @click.native="toChapterList">
-            <Cell textL="查看目录" textR="更新于下午sss" />
-        </CellContainer>
+            <CellContainer class="marginTop15" @click.native="toChapterList">
+                <Cell textL="查看目录" textR="更新于下午sss" />
+            </CellContainer>
 
-        <CellContainer class="marginTop15 ">
-            <van-row><div class="subTitle ">小说预览</div></van-row>
-            <van-row><div class=" grey">第一章</div></van-row>
-            <TextEllipsis :article="this.chapterPreview" :isHmtl="true" class="grey font12" />
-        </CellContainer>
-    </article>
+            <CellContainer class="marginTop15 ">
+                <van-row><div class="subTitle ">小说预览</div></van-row>
+                <van-row><div class=" grey">第一章</div></van-row>
+                <TextEllipsis :article="this.chapterPreview" :isHmtl="true" class="grey font12" />
+            </CellContainer>
+        </article>
+        <Loading v-else />
+    </section>
 </template>
 <script>
 import TextEllipsis from "../../components/common/textEllipsis";
@@ -51,23 +62,32 @@ import Cell from "../../components/common/cell";
 import CellContainer from "../../components/common/cell_container";
 import Img from "../../components/common/image";
 import { getHostName } from "../../../utils/common";
+import Loading from "../../components/common/loading_fullPage";
 
 import { fetchBookHome, fetchBookChapterList, fetchBookContent } from "../../api/fiction";
+import { mapActions } from "vuex";
 export default {
     components: {
         TextEllipsis,
         Cell,
         CellContainer,
-        Img
+        Img,
+        Loading
     },
     data() {
         return {
             bookInfo: {},
             chapterPreview: "",
-            firstChapterInfo: ""
+            firstChapterInfo: "",
+            isLoadingBasic: false
         };
     },
     methods: {
+        ...mapActions(["insertCollected"]),
+        addToBookShelf() {
+            let bookDetail = { ...this.bookInfo, curReadHref: this.firstChapterInfo };
+            this.insertCollected(bookDetail);
+        },
         getHost() {
             return getHostName(this.$route.query.link);
         },
@@ -85,7 +105,10 @@ export default {
             });
         },
         async fetchContainer() {
+            this.isLoadingBasic = true;
             const res = await fetchBookHome(this.$route.query.link);
+            this.isLoadingBasic = false;
+
             this.bookInfo = { ...res, chapterList: res.chapterList ? res.chapterList : this.$route.query.link };
             const bookList = await fetchBookChapterList(this.bookInfo.chapterList);
             this.firstChapterInfo = bookList[0];

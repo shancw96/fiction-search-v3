@@ -4,9 +4,7 @@
             <img src="../../../public/img/common/book-empty.jpg" />
         </section>
         <section style="text-align:center;margin-top:100px;">
-            <van-button type="primary" style="border-radius:5px" @click="jumpToSearch"
-                >立即搜索 !</van-button
-            >
+            <van-button type="primary" style="border-radius:5px" @click="jumpToSearch">立即搜索 !</van-button>
         </section>
     </div>
 </template>
@@ -23,7 +21,7 @@ export default {
 <style lang="scss" scoped>
 .fiction-empty {
     width: 100vw;
-    height: 70vh;
+    height: 100vh;
     display: flex;
     flex-direction: column;
     justify-content: center;

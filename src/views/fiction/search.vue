@@ -57,6 +57,8 @@
 import { fetchRecommand, fetchSearchKeyword } from "../../api/fiction";
 import FicitonCard from "../../components/fiction/fiction_card";
 import { isEmpty } from "../../../utils/common";
+import { mapActions, mapGetters } from "vuex";
+
 export default {
     components: {
         FicitonCard
@@ -77,13 +79,18 @@ export default {
             showRecommand: true
         };
     },
+    computed: {
+        ...mapGetters(["hotSearchList"])
+    },
     methods: {
+        ...mapActions(["setFictionHotSearch"]),
         onCancel() {
             this.keyword = "";
         },
 
         dropDownChange(value) {
-            console.log("TODO:其他网页爬取");
+            // console.log("TODO:其他网页爬取");
+            this.accurateSearch = value;
         },
         async getRecommand() {
             let res = await fetchRecommand();
@@ -111,10 +118,21 @@ export default {
                 biquge: "笔趣阁"
             };
             return dictionary[website.match(/(w+)(\.)([a-z]+)(\.)(com)/)[3]];
+        },
+        async displayRecommadList() {
+            const { datatime } = JSON.parse(window.localStorage.getItem("fiction_hotSearch"));
+            const oneDay = 100000000;
+            //存储过期，或者存储列表为空则重新请求
+            if (isEmpty(this.hotSearchList) || Date.now() - datatime > oneDay) {
+                let res = await this.getRecommand();
+                this.setFictionHotSearch(res);
+            }
+            this.recommandList = this.hotSearchList;
         }
     },
     mounted() {
-        this.getRecommand().then(res => (this.recommandList = res));
+        this.displayRecommadList();
+        console.log(this.hotSearchList);
     }
 };
 </script>

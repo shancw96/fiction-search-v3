@@ -84,8 +84,15 @@
 .bgGrey {
     background-color: #dfe4ea;
 }
+.bgWhite {
+    background-color: #fff;
+}
 
 .subTitle {
     font-size: 18px;
     padding-bottom: 10px;
+}
+
+.testBox {
+    border: 1px solid rgb(155, 155, 155);
 }
