@@ -3,6 +3,18 @@
     overflow: hidden; /* 隐藏溢出部分 */
     text-overflow: ellipsis; /* 显示省略符号来代表被隐藏的文本 */
 }
+.textElliplise3 {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+    overflow: hidden;
+}
+.textElliplise2 {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    overflow: hidden;
+}
 .pd5 {
     padding: 5px;
 }
@@ -86,6 +98,10 @@
 }
 .bgWhite {
     background-color: #fff;
+}
+
+.fontGrey {
+    color: rgb(141, 140, 140);
 }
 
 .subTitle {

@@ -1,6 +1,7 @@
 import Storage from "../../../utils/storage";
 import { isEmpty } from "../../../utils/common";
-import { findIndex, propEq } from "ramda";
+import { findIndex, propEq, find } from "ramda";
+import { Toast } from "vant";
 const fiction = {
     state: {
         collectedFiction: Storage.get("fiction_collected"),
@@ -9,6 +10,7 @@ const fiction = {
     },
     mutations: {
         SET_FICTION_HOT_SEARCH: (state, bookList) => {
+            console.log("SET_FICTION_HOT_SEARCH");
             state.hotSearchList = bookList;
             Storage.set("fiction_hotSearch", state.hotSearchList);
         },
@@ -16,23 +18,25 @@ const fiction = {
         //collected fiction
         // 删除指定小说
         DELETE_FICTION_COLLECT: (state, name) => {
-            console.log("--- delete collected fiction ---");
+            Toast.success("删除小说成功");
             state.collectedFiction = state.collectedFiction.filter(item => item.title !== name);
             Storage.set("fiction_collected", state.collectedFiction);
         },
         //插入，新收藏的小说
         INSERT_FICTION_COLLECT: (state, obj) => {
+            console.log("INSERT_FICTION_COLLECT");
             //收藏列表为空的话，避免报错
             if (isEmpty(state.collectedFiction)) {
                 state.collectedFiction = [];
             }
             const notHaveBook = state.collectedFiction.every(fiction => fiction.title !== obj.title);
             if (!notHaveBook) {
-                console.log("----添加失败，已经收藏---");
-                return;
+                Toast.fail("书籍已收藏，请勿重复添加");
+                return false;
             }
             state.collectedFiction.push(obj);
-            Storage.set("collected", state.collectedFiction);
+            Storage.set("fiction_collected", state.collectedFiction);
+            Toast.success("加入书架成功");
         },
         UPDATE_FICTION_COLLECT: (state, obj) => {
             console.log("---UPDATE_FICTION_COLLECT---");
@@ -53,9 +57,11 @@ const fiction = {
             console.log("---SORT_FICTION_COLLECT---");
             //通过ramda 找到下标，然后进行切割重组
             const clickBookIndex = findIndex(propEq("title", obj.title))(state.collectedFiction);
+            console.log(clickBookIndex);
+
             state.collectedFiction = [
                 ...state.collectedFiction.slice(clickBookIndex, clickBookIndex + 1),
-                ...state.collectedFiction.slice(0, clickBookIndex - 1),
+                ...state.collectedFiction.slice(0, clickBookIndex),
                 ...state.collectedFiction.slice(clickBookIndex + 1)
             ];
 
@@ -65,8 +71,18 @@ const fiction = {
         // /**************视图相关********************** */
         //不需要永久保存存放在session中
         SET_FICTION_VIEW: (state, obj) => {
+            console.log("SET_FICTION_VIEW");
             state.currentView = obj;
             Storage.set("fiction_currentView", state.currentView, "session");
+        },
+
+        SET_CURRENT_VIEW_FROM_COLLECTED: (state, title) => {
+            console.log("SET_CURRENT_VIEW_FROM_COLLECTED");
+            // console.log("title");
+            state.currentView = find(propEq("title", title))(state.collectedFiction);
+            // console.log(state.currentView);
+            Storage.set("fiction_currentView", state.currentView, "session");
+            // console.log(Storage.get("fiction_currentView"));
         }
     },
     actions: {
@@ -87,6 +103,10 @@ const fiction = {
         },
         sortCollected({ commit }, obj) {
             commit("SORT_FICTION_COLLECT", obj);
+        },
+        //如果bookHome中的小说，是已经收藏过的，那么直接用收藏的进度
+        setCurrentViewFromCollected({ commit }, title) {
+            commit("SET_CURRENT_VIEW_FROM_COLLECTED", title);
         },
         // /**************视图相关********************** */
         setCurrentView({ commit }, obj) {

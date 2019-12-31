@@ -5,11 +5,7 @@
                 <van-image
                     width="100%"
                     height="100%"
-                    :src="
-                        !!curBookInfo.imgLink
-                            ? curBookInfo.imgLink
-                            : 'https://i.loli.net/2019/12/29/Kjel2kduwQArxBR.jpg'
-                    "
+                    :src="!!curBookInfo.img ? curBookInfo.img : 'https://i.loli.net/2019/12/29/Kjel2kduwQArxBR.jpg'"
                 />
             </div>
             <div class="deleteIcon" v-if="isEditingBook">
@@ -33,10 +29,6 @@ export default {
         hasTitle: {
             type: Boolean,
             default: true
-        },
-        isRecentRead: {
-            type: Boolean,
-            default: false
         },
         curBookInfo: {
             type: Object,

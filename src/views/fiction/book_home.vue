@@ -65,7 +65,9 @@ import { getHostName } from "../../../utils/common";
 import Loading from "../../components/common/loading_fullPage";
 
 import { fetchBookHome, fetchBookChapterList, fetchBookContent } from "../../api/fiction";
-import { mapActions } from "vuex";
+import { mapActions, mapGetters } from "vuex";
+
+import { findIndex, propEq, find } from "ramda";
 export default {
     components: {
         TextEllipsis,
@@ -79,23 +81,32 @@ export default {
             bookInfo: {},
             chapterPreview: "",
             firstChapterInfo: "",
+            bookChapterList: [],
             isLoadingBasic: false
         };
     },
+    computed: {
+        ...mapGetters(["currentView", "collectedFiction"])
+    },
     methods: {
-        ...mapActions(["insertCollected"]),
-        addToBookShelf() {
-            let bookDetail = { ...this.bookInfo, curReadHref: this.firstChapterInfo };
-            this.insertCollected(bookDetail);
+        ...mapActions(["insertCollected", "setCurrentView", "setCurrentViewFromCollected"]),
+        async addToBookShelf() {
+            let tobeCollected = { ...this.bookInfo };
+            this.insertCollected(tobeCollected);
         },
         getHost() {
             return getHostName(this.$route.query.link);
         },
         toContent() {
-            if (!this.firstChapterInfo) {
+            if (!this.bookInfo.recentRead) {
                 this.$toast("正在加载中，请稍后再试");
             } else {
-                this.$router.push({ name: "fiction_content", query: { link: this.firstChapterInfo.href } });
+                let result = find(propEq("title", this.bookInfo.title))(this.collectedFiction);
+
+                !result
+                    ? this.setCurrentView({ ...this.bookInfo, isCollected: false })
+                    : this.setCurrentViewFromCollected(this.bookInfo.title);
+                this.$router.push({ name: "fiction_content", query: { link: this.bookInfo.recentRead.href } });
             }
         },
         toChapterList() {
@@ -108,11 +119,17 @@ export default {
             this.isLoadingBasic = true;
             const res = await fetchBookHome(this.$route.query.link);
             this.isLoadingBasic = false;
+            this.bookInfo = res;
+            //如果后台没有章节列表链接数据，则从 路由中获取
+            // this.bookInfo = { ...res, chapterListHref: res.chapterList ? res.chapterList : this.$route.query.link };
+            const chapterList = await fetchBookChapterList(res.chapterList ? res.chapterList : this.$route.query.link);
+            this.bookInfo = { ...res, chapterList, recentRead: chapterList[0] };
 
-            this.bookInfo = { ...res, chapterList: res.chapterList ? res.chapterList : this.$route.query.link };
-            const bookList = await fetchBookChapterList(this.bookInfo.chapterList);
-            this.firstChapterInfo = bookList[0];
-            const { text } = await fetchBookContent(bookList[0].href);
+            //将要废弃
+            // this.firstChapterInfo = this.bookInfo.recentRead
+
+            //第一章节预览
+            const { text } = await fetchBookContent(this.bookInfo.recentRead.href);
             this.chapterPreview = text;
         }
     },
