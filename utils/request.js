@@ -5,10 +5,11 @@
 import axios from "axios";
 import { Dialog, Toast } from "vant";
 
-const BASE_URL =
-    process.env.NODE_ENV === "development"
-        ? "http://localhost:4008"
-        : "https://limiaomiao.site";
+// const BASE_URL =
+//     process.env.NODE_ENV === "development"
+//         ? "http://localhost:4008"
+//         : "https://limiaomiao.site";
+const BASE_URL = "http://localhost:4008";
 
 const TIMEOUT = 1000 * 20; // 请求timeout: 时间
 

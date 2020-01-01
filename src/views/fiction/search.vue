@@ -58,7 +58,7 @@ import { fetchRecommand, fetchSearchKeyword } from "../../api/fiction";
 import FicitonCard from "../../components/fiction/fiction_card";
 import { isEmpty } from "../../../utils/common";
 import { mapActions, mapGetters } from "vuex";
-
+import Storage from "../../../utils/storage";
 export default {
     components: {
         FicitonCard
@@ -120,10 +120,12 @@ export default {
             return dictionary[website.match(/(w+)(\.)([a-z]+)(\.)(com)/)[3]];
         },
         async displayRecommadList() {
-            const { datatime } = JSON.parse(window.localStorage.getItem("fiction_hotSearch"));
+            let dataString = window.localStorage.getItem("fiction_hotSearch") || 0;
+            console.log(dataString);
+            let datatime = JSON.parse(dataString);
             const oneDay = 100000000;
             //存储过期，或者存储列表为空则重新请求
-            if (isEmpty(this.hotSearchList) || Date.now() - datatime > oneDay) {
+            if (!datatime || isEmpty(this.hotSearchList) || Date.now() - datatime > oneDay) {
                 let res = await this.getRecommand();
                 this.setFictionHotSearch(res);
             }
