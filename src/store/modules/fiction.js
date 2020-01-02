@@ -65,7 +65,7 @@ const fiction = {
                 ...state.collectedFiction.slice(clickBookIndex + 1)
             ];
 
-            Storage.set("fiction_collected", state.collectedFiction);
+            Storage.set("fiction_collected", { ...state.collectedFiction, isCollected: true });
         },
 
         // /**************视图相关********************** */
