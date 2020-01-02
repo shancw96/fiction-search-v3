@@ -3,7 +3,6 @@
 */
 
 import axios from "axios";
-import { Dialog, Toast } from "vant";
 
 const BASE_URL = process.env.NODE_ENV === "development" ? "http://localhost:4008" : "https://limiaomiao.site";
 // const BASE_URL = "https://limiaomiao.site";
