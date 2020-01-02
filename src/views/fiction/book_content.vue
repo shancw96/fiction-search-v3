@@ -1,12 +1,15 @@
 <template>
     <article ref="container" class="bookContainer" :style="{ ...activeStyle, fontSize: `${activeStyle.fontSize}px` }">
-        <van-row :class="['navguideContainer', 'slide-top', isActive ? 'active' : '']">
+        <van-row :class="['navguideContainer', 'slide-top', isHeaderActive ? 'active' : '']">
             <van-nav-bar :title="bookTitle" left-text="返回" left-arrow @click-left="toHome">
                 <van-row slot="right" type="flex" justify="space-between">
-                    <van-col span="8 ">
+                    <van-col span="5 ">
                         <van-icon name="setting-o" @click="showControlBar" size="20" />
                     </van-col>
-                    <van-col @click="changeCollect" span="8">
+                    <van-col>
+                        <van-icon name="label-o" span="5" size="20" @click="showChapterList" />
+                    </van-col>
+                    <van-col @click="changeCollect" span="5">
                         <van-icon name="star" v-if="currentView.isCollected" size="20" />
                         <van-icon name="star-o" v-else size="20" />
                     </van-col>
@@ -67,6 +70,10 @@
                 </section>
             </section>
         </van-popup>
+
+        <van-popup v-model="isChapterBarActive" position="right" :style="{ width: '70%', height: '100%' }">
+            <ChapterList :isSidebar="true" @updateContent="jumpChapter" />
+        </van-popup>
     </article>
 </template>
 <script>
@@ -74,7 +81,11 @@ import { fetchBookContent } from "../../api/fiction";
 import { mapGetters, mapActions } from "vuex";
 import { black } from "color-name";
 import { find, propEq } from "ramda";
+import ChapterList from "../../components/fiction/chapterList";
 export default {
+    components: {
+        ChapterList
+    },
     data() {
         return {
             boxHeight: "",
@@ -82,11 +93,11 @@ export default {
             boxList: [],
             startChapterIndex: 0,
 
-            isActive: false,
+            isHeaderActive: false,
             isControlBarActive: false,
+            isChapterBarActive: false,
 
             isCollected: false,
-            // showContentSetting: true,
 
             styleControl: {
                 backgroundStyle: [
@@ -127,18 +138,20 @@ export default {
                 !this.isFetching
             ) {
                 try {
-                    this.getBookContent();
+                    this.getBookContent(this.$route.query.link);
                 } catch (e) {
                     this.isFetching = false;
                 }
             }
         },
         showHeader() {
-            console.log("triggle");
-            this.isActive = !this.isActive;
+            this.isHeaderActive = !this.isHeaderActive;
         },
         showControlBar() {
             this.isControlBarActive = !this.isControlBarActive;
+        },
+        showChapterList() {
+            this.isChapterBarActive = !this.isChapterBarActive;
         },
         changeCollect() {
             //修改视图
@@ -152,16 +165,16 @@ export default {
         toHome() {
             this.$router.push({ name: "home" });
         },
-        async getBookContent() {
+        async getBookContent(url) {
             this.isFetching = true;
-            const res = await fetchBookContent(this.$route.query.link);
+            const res = await fetchBookContent(url);
             this.isFetching = false;
 
             //设置当前视图
             this.setCurrentView({
                 ...this.currentView,
                 recentRead: {
-                    href: this.$route.query.link,
+                    href: url,
                     title: res.curTitle
                 }
             });
@@ -185,6 +198,11 @@ export default {
             // console.log(res);
             this.activeStyle = { ...this.activeStyle, ...res };
             this.setPageControl(this.activeStyle);
+        },
+        jumpChapter(url) {
+            console.log(url);
+            this.boxList = [];
+            this.getBookContent(url);
         }
     },
     mounted() {
@@ -192,10 +210,7 @@ export default {
         document.addEventListener("scroll", this.listenScroll);
         //每次刷新后，为了防止进度丢失，使用currentView 的数据
         this.$route.query.link = this.currentView.recentRead.href;
-        this.getBookContent();
-    },
-    updated() {
-        // document.removeEventListener("scroll", this.listenScroll);
+        this.getBookContent(this.$route.query.link);
     },
     beforeDestroy() {
         document.removeEventListener("scroll", this.listenScroll);

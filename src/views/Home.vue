@@ -19,6 +19,7 @@
                             imgWidth="105px"
                             :curBookInfo="recentReadBook"
                             @click.native="readBook(recentReadBook)"
+                            :hasTitle="false"
                     /></van-col>
                     <van-col
                         span="14"

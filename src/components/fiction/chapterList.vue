@@ -1,15 +1,18 @@
 <template>
     <article class="container">
         <section v-if="!isLoading">
-            <section class="header">
-                <section class="fictionInfo">
-                    <div class="fictionName">小说名称</div>
-                    <div class="count">总章节数：xxx</div>
+            <van-sticky>
+                <section class="header">
+                    <section class="fictionInfo">
+                        <div class="fictionName">{{ bookTitle }}</div>
+                        <div class="count">总章节数：{{ chapterLen }}</div>
+                    </section>
+                    <section class="sort">
+                        <van-icon name="bar-chart-o" size="20px" color="#fff" @click="reverseBook" />
+                    </section>
                 </section>
-                <section class="sort">
-                    <van-icon name="bar-chart-o" size="20px" @click="reverseBook" />
-                </section>
-            </section>
+            </van-sticky>
+
             <van-list v-model="listDownLoading" :finished="listDownFinished" finished-text="没有更多了" @load="onLoad">
                 <van-cell
                     :title="chapter.title"
@@ -31,7 +34,21 @@
 import { fetchBookChapterList } from "../../api/fiction";
 import { pagingArr } from "../../../utils/common";
 import { reverse } from "ramda";
+import { findIndex, propEq, find } from "ramda";
+import { mapActions, mapGetters } from "vuex";
 export default {
+    props: {
+        jumpChapter: {
+            type: Function,
+            default: () => {
+                console.log("should be called!");
+            }
+        },
+        isSidebar: {
+            type: Boolean,
+            default: false
+        }
+    },
     data() {
         return {
             chapterList: [],
@@ -42,24 +59,35 @@ export default {
             listDownFinished: false,
             curReadTitle: "", //从localStorage中读取，能够显示
             pageIndex: 0,
-            isSidebar: false
+
+            bookInfo: {}
         };
     },
     computed: {
+        ...mapGetters(["currentView", "collectedFiction"]),
         negativePagingChapter() {
             return pagingArr(reverse(this.chapterList), 50);
         },
         positivePagingChapter() {
             return pagingArr(this.chapterList, 50);
+        },
+        chapterLen() {
+            return this.chapterList.length;
+        },
+        bookTitle() {
+            return this.$route.params.title;
+        },
+        _chapterList() {
+            const list = this.$route.params.chapterList || this.currentView.chapterList;
+            return list;
         }
     },
     methods: {
         toExactChapter(chapter) {
-            console.log(chapter);
             this.curReadTitle = chapter.title;
             !this.isSidebar
                 ? this.$router.push({ name: "fiction_content", query: { link: chapter.href } })
-                : console.log("TODO:页面内更改");
+                : this.$emit("updateContent", chapter.href);
         },
         onLoad() {
             this.listDownLoading = true;
@@ -81,7 +109,7 @@ export default {
         },
         async getBookChapter() {
             this.isLoading = true;
-            const res = await fetchBookChapterList(this.$route.query.link);
+            const res = this._chapterList || (await fetchBookChapterList(this.$route.query.chapterHref));
             this.chapterList = res;
             this.isLoading = false;
         }
@@ -98,15 +126,19 @@ export default {
     height: 100vh;
     background-color: #fff;
     .header {
+        z-index: 2;
+        background-color: #1e90ff;
         padding: 10px;
         display: flex;
         justify-content: space-between;
     }
     .fictionInfo {
         // height: 5vh;
+
         .fictionName {
             font-size: 20px;
             font-weight: bold;
+            color: #fff;
         }
         .count {
             font-size: 12px;

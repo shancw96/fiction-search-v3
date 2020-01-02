@@ -82,7 +82,8 @@ export default {
             chapterPreview: "",
             firstChapterInfo: "",
             bookChapterList: [],
-            isLoadingBasic: false
+            isLoadingBasic: false,
+            chapterUrl: ""
         };
     },
     computed: {
@@ -101,36 +102,48 @@ export default {
             if (!this.bookInfo.recentRead) {
                 this.$toast("正在加载中，请稍后再试");
             } else {
-                let result = find(propEq("title", this.bookInfo.title))(this.collectedFiction);
-
-                !result
-                    ? this.setCurrentView({ ...this.bookInfo, isCollected: false })
-                    : this.setCurrentViewFromCollected(this.bookInfo.title);
                 this.$router.push({ name: "fiction_content", query: { link: this.bookInfo.recentRead.href } });
             }
         },
+
         toChapterList() {
             this.$router.push({
                 name: "fiction_chapterList",
-                query: { link: this.bookInfo.chapterList ? this.bookInfo.chapterList : this.$route.query.link }
+                query: { chapterHref: this.chapterUrl },
+                params: {
+                    chapterList: this.bookInfo.chapterList,
+                    title: this.bookInfo.title
+                }
             });
+        },
+        setBookView() {
+            let result = find(propEq("title", this.bookInfo.title))(this.collectedFiction);
+            !result
+                ? this.setCurrentView({ ...this.bookInfo, isCollected: false })
+                : this.setCurrentViewFromCollected(this.bookInfo.title);
         },
         async fetchContainer() {
             this.isLoadingBasic = true;
             const res = await fetchBookHome(this.$route.query.link);
+            //留给章节列表使用
+            this.chapterUrl = res.chapterList ? res.chapterList : this.$route.query.link;
+
             this.isLoadingBasic = false;
             this.bookInfo = res;
             //如果后台没有章节列表链接数据，则从 路由中获取
-            // this.bookInfo = { ...res, chapterListHref: res.chapterList ? res.chapterList : this.$route.query.link };
+
             const chapterList = await fetchBookChapterList(res.chapterList ? res.chapterList : this.$route.query.link);
             this.bookInfo = { ...res, chapterList, recentRead: chapterList[0] };
 
-            //将要废弃
-            // this.firstChapterInfo = this.bookInfo.recentRead
+            this.setBookView();
 
             //第一章节预览
+            if (this.getHost(this.$route.query.link))
+                //对2k小说做chapterList的适配
+                this.bookInfo.recentRead.href = res.chapterList + this.bookInfo.recentRead.href;
             const { text } = await fetchBookContent(this.bookInfo.recentRead.href);
             this.chapterPreview = text;
+            console.log(this.bookInfo);
         }
     },
     mounted() {
