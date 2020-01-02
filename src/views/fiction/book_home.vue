@@ -102,6 +102,7 @@ export default {
             if (!this.bookInfo.recentRead) {
                 this.$toast("正在加载中，请稍后再试");
             } else {
+                this.setBookView();
                 this.$router.push({ name: "fiction_content", query: { link: this.bookInfo.recentRead.href } });
             }
         },
@@ -116,7 +117,16 @@ export default {
                 }
             });
         },
-        setBookView() {},
+        setBookView() {
+            if (this.collectedFiction) {
+                let result = find(propEq("title", this.bookInfo.title))(this.collectedFiction);
+                !result
+                    ? this.setCurrentView({ ...this.bookInfo, isCollected: false })
+                    : this.setCurrentViewFromCollected(this.bookInfo.title);
+            } else {
+                this.setCurrentView({ ...this.bookInfo, isCollected: false });
+            }
+        },
         async fetchContainer() {
             this.isLoadingBasic = true;
             const res = await fetchBookHome(this.$route.query.link);
@@ -130,15 +140,13 @@ export default {
             const chapterList = await fetchBookChapterList(res.chapterList ? res.chapterList : this.$route.query.link);
             this.bookInfo = { ...res, chapterList, recentRead: chapterList[0] };
 
-            let result = find(propEq("title", this.bookInfo.title))(this.collectedFiction);
-            !result
-                ? this.setCurrentView({ ...this.bookInfo, isCollected: false })
-                : this.setCurrentViewFromCollected(this.bookInfo.title);
+            this.setBookView();
 
             //第一章节预览
-            if (this.getHost(this.$route.query.link) === "fpzw")
-                //对2k小说做chapterList的适配
+            if (this.getHost(this.$route.query.link) === "fpzw") {
                 this.bookInfo.recentRead.href = res.chapterList + this.bookInfo.recentRead.href;
+            }
+            //对2k小说做chapterList的适配
             const { text } = await fetchBookContent(this.bookInfo.recentRead.href);
             this.chapterPreview = text;
             console.log(this.bookInfo);
