@@ -116,12 +116,7 @@ export default {
                 }
             });
         },
-        setBookView() {
-            let result = find(propEq("title", this.bookInfo.title))(this.collectedFiction);
-            !result
-                ? this.setCurrentView({ ...this.bookInfo, isCollected: false })
-                : this.setCurrentViewFromCollected(this.bookInfo.title);
-        },
+        setBookView() {},
         async fetchContainer() {
             this.isLoadingBasic = true;
             const res = await fetchBookHome(this.$route.query.link);
@@ -135,7 +130,10 @@ export default {
             const chapterList = await fetchBookChapterList(res.chapterList ? res.chapterList : this.$route.query.link);
             this.bookInfo = { ...res, chapterList, recentRead: chapterList[0] };
 
-            this.setBookView();
+            let result = find(propEq("title", this.bookInfo.title))(this.collectedFiction);
+            !result
+                ? this.setCurrentView({ ...this.bookInfo, isCollected: false })
+                : this.setCurrentViewFromCollected(this.bookInfo.title);
 
             //第一章节预览
             if (this.getHost(this.$route.query.link) === "fpzw")
