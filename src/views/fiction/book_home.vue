@@ -44,7 +44,7 @@
             </CellContainer>
 
             <CellContainer class="marginTop15" @click.native="toChapterList">
-                <Cell textL="查看目录" textR="更新于下午sss" />
+                <Cell textL="查看目录" :textR="this.bookInfo.update" />
             </CellContainer>
 
             <CellContainer class="marginTop15 ">

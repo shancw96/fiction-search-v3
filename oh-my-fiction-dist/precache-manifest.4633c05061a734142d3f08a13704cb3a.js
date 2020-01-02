@@ -12,7 +12,7 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "img/common/book_old.jpeg"
   },
   {
-    "revision": "7673659fc00767e786e38a352ffe18d2",
+    "revision": "92a4d20bd8093f5261f8e0e31f0e7a29",
     "url": "index.html"
   },
   {
@@ -24,12 +24,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "robots.txt"
   },
   {
-    "revision": "87ee0e7a02091259e235",
+    "revision": "006a00748b698883157a",
     "url": "static/css/app.4f7080ae.css"
-  },
-  {
-    "revision": "262c9561d993496587e9",
-    "url": "static/css/chunk-547ebd58.f7a89dff.css"
   },
   {
     "revision": "4a00b22d2af86c066b87",
@@ -44,6 +40,10 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "static/css/chunk-f8fbc1dc.c54e2052.css"
   },
   {
+    "revision": "6c7b0faac4aa141e7264",
+    "url": "static/css/chunk-fb8dd058.1ff0fd24.css"
+  },
+  {
     "revision": "0f5456231c4c400738ec",
     "url": "static/css/chunk-vendors.f9c5067c.css"
   },
@@ -52,8 +52,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "static/img/book-empty.d23e86c7.jpg"
   },
   {
-    "revision": "87ee0e7a02091259e235",
-    "url": "static/js/app.28288dad.js"
+    "revision": "006a00748b698883157a",
+    "url": "static/js/app.4bc6f8f1.js"
   },
   {
     "revision": "4ed5196f1ae967080f80",
@@ -62,10 +62,6 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
     "revision": "a5dedba377cd5e55e79a",
     "url": "static/js/chunk-4e46372a.ffa908b9.js"
-  },
-  {
-    "revision": "262c9561d993496587e9",
-    "url": "static/js/chunk-547ebd58.d75212fc.js"
   },
   {
     "revision": "4a00b22d2af86c066b87",
@@ -78,6 +74,10 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
     "revision": "2323525e4f9d67979c4b",
     "url": "static/js/chunk-f8fbc1dc.573f03d9.js"
+  },
+  {
+    "revision": "6c7b0faac4aa141e7264",
+    "url": "static/js/chunk-fb8dd058.413d97e5.js"
   },
   {
     "revision": "0f5456231c4c400738ec",
