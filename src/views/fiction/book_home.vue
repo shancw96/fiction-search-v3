@@ -138,7 +138,7 @@ export default {
             this.setBookView();
 
             //第一章节预览
-            if (this.getHost(this.$route.query.link))
+            if (this.getHost(this.$route.query.link) === "fpzw")
                 //对2k小说做chapterList的适配
                 this.bookInfo.recentRead.href = res.chapterList + this.bookInfo.recentRead.href;
             const { text } = await fetchBookContent(this.bookInfo.recentRead.href);
