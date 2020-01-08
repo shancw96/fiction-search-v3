@@ -1,6 +1,6 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
-import Home from "../views/Home.vue";
+import Home from "../views/v2/Home.vue";
 
 Vue.use(VueRouter);
 
@@ -10,14 +10,9 @@ const routes = [
         redirect: { name: "home" }
     },
     {
-        path: "/home",
-        name: "v2_home",
-        component: Home
-    },
-    {
         path: "/v2_home",
         name: "home",
-        component: () => import("../views/v2/Home.vue")
+        component: Home
     },
     {
         path: "/fiction",
