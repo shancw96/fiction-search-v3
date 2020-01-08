@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+        <title>Document</title>
+    </head>
+    <body>
+        <section>下载文件测试：<button onclick="handleClick">点击下载</button></section>
+    </body>
+    <script>
+        function handleClick(fileName = "kai_GB2312.ttf") {
+            window.open("https://limiaomiao.site:4008/file/download/?fileName=kai_GB2312.ttf");
+        }
+    </script>
+</html>

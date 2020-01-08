@@ -2,7 +2,8 @@ import Storage from "../../../utils/storage";
 const defaultSetting = {
     fontSize: 16,
     backgroundColor: "#dff9fb ",
-    color: "rgb(45, 52, 54)"
+    color: "rgb(45, 52, 54)",
+    fontFamily: ""
 };
 const page = {
     state: {
@@ -10,6 +11,7 @@ const page = {
     },
     mutations: {
         SET_PAGE_CONTROL: (state, bookList) => {
+            console.log("SET PAGE_CONTROL");
             state.hotSearchList = bookList;
             Storage.set("pageControl", state.hotSearchList);
         }

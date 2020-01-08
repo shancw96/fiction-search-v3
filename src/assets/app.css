@@ -1,3 +1,8 @@
+@font-face {
+    font-family: "楷体";
+    src: url("../../public/fonts/kai_GB2312.ttf");
+}
+
 .ellipsis {
     white-space: nowrap; /* 使文本不可换行 */
     overflow: hidden; /* 隐藏溢出部分 */

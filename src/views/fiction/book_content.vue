@@ -18,7 +18,7 @@
         </van-row>
         <section class="calloutBox" @click="showHeader"></section>
 
-        <section class="" v-for="(item, index) in boxList" :key="index">
+        <section :style="{ fontFamily: activeStyle.fontFamily }" v-for="(item, index) in boxList" :key="index">
             <section style="height:40px;overflow:hidden;padding:10px">
                 <van-divider :style="{ color: '#1989fa', borderColor: '#1989fa', padding: '0 16px' }">
                     {{ currentView.recentRead.title }}
@@ -61,11 +61,12 @@
                 <div class="confBlock"></div>
                 <!-- 亮度 -->
                 <section style="box-sizing: border-box;padding:10px">
-                    <van-row>
-                        <van-col span="4" style="height:30px">亮度：</van-col>
-                        <van-col span="20" style="margin-top:10px"
-                            ><van-slider v-model="styleControl.localbrightness" :min="50" :max="100"
-                        /></van-col>
+                    <van-row type="flex" style="display:flex;align-items:center">
+                        <van-col span="6">字体设置：</van-col>
+                        <van-col span="6" class=""><van-button @click="changeFont('')">默认</van-button></van-col>
+                        <van-col span="6" class="gb2312"
+                            ><van-button @click="changeFont('楷体')">楷体</van-button></van-col
+                        >
                     </van-row>
                 </section>
             </section>
@@ -132,6 +133,11 @@ export default {
     },
     methods: {
         ...mapActions(["setCurrentView", "updateCollected", "deleteCollected", "insertCollected", "setPageControl"]),
+        changeFont(fontName) {
+            console.log("change font");
+            this.activeStyle = { ...this.activeStyle, fontFamily: fontName };
+            this.setPageControl(this.activeStyle);
+        },
         listenScroll() {
             if (
                 window.scrollY + window.screen.height > document.body.clientHeight - window.screen.height * 0.7 &&
@@ -207,6 +213,7 @@ export default {
     },
     mounted() {
         this.activeStyle = this.pageControl;
+        console.log(this.activeStyle);
         document.addEventListener("scroll", this.listenScroll);
         //每次刷新后，为了防止进度丢失，使用currentView 的数据
         this.$route.query.link = this.currentView.recentRead.href;
@@ -218,6 +225,10 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
+.gb2312 {
+    font-family: "楷体";
+}
+
 .box {
     border: 1px solid red;
     // height: 900px;
