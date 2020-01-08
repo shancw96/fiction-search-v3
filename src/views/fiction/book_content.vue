@@ -1,5 +1,5 @@
 <template>
-    <article ref="container" class="bookContainer" :style="{ ...activeStyle, fontSize: `${activeStyle.fontSize}px` }">
+    <article ref="container" class="bookContainer" :style="{ ...pageControl, fontSize: `${pageControl.fontSize}px` }">
         <van-row :class="['navguideContainer', 'slide-top', isHeaderActive ? 'active' : '']">
             <van-nav-bar :title="bookTitle" left-text="返回" left-arrow @click-left="toHome">
                 <van-row slot="right" type="flex" justify="space-between">
@@ -18,7 +18,7 @@
         </van-row>
         <section class="calloutBox" @click="showHeader"></section>
 
-        <section :style="{ fontFamily: activeStyle.fontFamily }" v-for="(item, index) in boxList" :key="index">
+        <section :style="{ fontFamily: pageControl.fontFamily }" v-for="(item, index) in boxList" :key="index">
             <section style="height:40px;overflow:hidden;padding:10px">
                 <van-divider :style="{ color: '#1989fa', borderColor: '#1989fa', padding: '0 16px' }">
                     {{ currentView.recentRead.title }}
@@ -35,7 +35,7 @@
                     <van-col span="8"
                         ><van-button style="width:100%" @click="changeFontSize('decrease')">-</van-button></van-col
                     >
-                    <van-col style="align-self:center;text-align:center;">字体大小：{{ activeStyle.fontSize }}</van-col>
+                    <van-col style="align-self:center;text-align:center;">字体大小：{{ pageControl.fontSize }}</van-col>
                     <van-col span="8"
                         ><van-button style="width:100%" @click="changeFontSize('add')">+</van-button></van-col
                     >
@@ -121,8 +121,7 @@ export default {
                 ],
                 fontSize: 16,
                 localbrightness: 75
-            },
-            activeStyle: {}
+            }
         };
     },
     computed: {
@@ -134,9 +133,17 @@ export default {
     methods: {
         ...mapActions(["setCurrentView", "updateCollected", "deleteCollected", "insertCollected", "setPageControl"]),
         changeFont(fontName) {
-            console.log("change font");
-            this.activeStyle = { ...this.activeStyle, fontFamily: fontName };
-            this.setPageControl(this.activeStyle);
+            this.setPageControl({ ...this.pageControl, fontFamily: fontName });
+        },
+
+        changeFontSize(mode) {
+            mode == "add"
+                ? this.setPageControl({ ...this.pageControl, fontSize: this.pageControl.fontSize + 1 })
+                : this.setPageControl({ ...this.pageControl, fontSize: this.pageControl.fontSize - 1 });
+        },
+        changeBgStyle(color) {
+            let res = find(propEq("backgroundColor", color))(this.styleControl.backgroundStyle);
+            this.setPageControl({ ...this.pageControl, ...res });
         },
         listenScroll() {
             if (
@@ -195,16 +202,6 @@ export default {
 
             console.log(this.currentView);
         },
-        changeFontSize(mode) {
-            mode == "add" ? (this.activeStyle.fontSize += 1) : (this.activeStyle.fontSize -= 1);
-            this.setPageControl(this.activeStyle);
-        },
-        changeBgStyle(color) {
-            let res = find(propEq("backgroundColor", color))(this.styleControl.backgroundStyle);
-            // console.log(res);
-            this.activeStyle = { ...this.activeStyle, ...res };
-            this.setPageControl(this.activeStyle);
-        },
         jumpChapter(url) {
             console.log(url);
             this.boxList = [];
@@ -212,8 +209,6 @@ export default {
         }
     },
     mounted() {
-        this.activeStyle = this.pageControl;
-        console.log(this.activeStyle);
         document.addEventListener("scroll", this.listenScroll);
         //每次刷新后，为了防止进度丢失，使用currentView 的数据
         this.$route.query.link = this.currentView.recentRead.href;

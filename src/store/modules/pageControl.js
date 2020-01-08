@@ -10,15 +10,15 @@ const page = {
         control: Storage.get("pageControl", defaultSetting)
     },
     mutations: {
-        SET_PAGE_CONTROL: (state, bookList) => {
+        SET_PAGE_CONTROL: (state, pageControl) => {
             console.log("SET PAGE_CONTROL");
-            state.hotSearchList = bookList;
-            Storage.set("pageControl", state.hotSearchList);
+            state.control = pageControl;
+            Storage.set("pageControl", state.control);
         }
     },
     actions: {
-        setPageControl({ commit }, bookList) {
-            commit("SET_PAGE_CONTROL", bookList);
+        setPageControl({ commit }, pageControl) {
+            commit("SET_PAGE_CONTROL", pageControl);
         }
     }
 };
