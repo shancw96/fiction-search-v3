@@ -18,7 +18,11 @@
         </van-row>
         <section class="calloutBox" @click="showHeader"></section>
 
-        <section :style="{ fontFamily: pageControl.fontFamily }" v-for="(item, index) in boxList" :key="index">
+        <section
+            :style="{ fontFamily: pageControl.fontFamily, padding: '0 1vw' }"
+            v-for="(item, index) in boxList"
+            :key="index"
+        >
             <section style="height:40px;overflow:hidden;padding:10px">
                 <van-divider :style="{ color: '#1989fa', borderColor: '#1989fa', padding: '0 16px' }">
                     {{ currentView.recentRead.title }}
