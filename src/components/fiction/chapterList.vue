@@ -83,11 +83,15 @@ export default {
         }
     },
     methods: {
+        ...mapActions(["setCurrentView"]),
         toExactChapter(chapter) {
             this.curReadTitle = chapter.title;
-            !this.isSidebar
-                ? this.$router.push({ name: "fiction_content", query: { link: chapter.href } })
-                : this.$emit("updateContent", chapter.href);
+            if (!this.isSidebar) {
+                this.setCurrentView({ ...this.currentView, recentRead: chapter });
+                this.$router.push({ name: "fiction_content" });
+            } else {
+                this.$emit("updateContent", chapter.href);
+            }
         },
         onLoad() {
             this.listDownLoading = true;

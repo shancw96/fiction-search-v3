@@ -20,8 +20,8 @@
     position: relative;
     overflow: hidden;
     box-sizing: border-box;
-    width: 335px;
-    height: 35px;
+    width: 90vw;
+    height: 5vh;
     border-radius: 20px;
     padding: 0 10px;
     background: #fbfbfb;

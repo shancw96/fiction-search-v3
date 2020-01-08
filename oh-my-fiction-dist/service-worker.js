@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/4.3.1/workbox-sw.js");
 
 importScripts(
-  "precache-manifest.27cd87d70de5b9d656193bdef72a0d41.js"
+  "precache-manifest.31eb27d60f501712fe6e525b5d9a728d.js"
 );
 
 workbox.core.setCacheNameDetails({prefix: "oh-my-fiction-v3"});
