@@ -4,7 +4,7 @@ const getters = {
     currentView: state => state.fiction.currentView,
     hotSearchList: state => state.fiction.hotSearchList,
     //login
-
+    JWT: state => state.user.token,
     //页面设置
     pageControl: state => state.page.control
 };

@@ -4,11 +4,14 @@
         <section v-else class="homeContainer">
             <section class="recentRead">
                 <van-row style="margin:0 0 5vh 0 " type="flex" justify="space-between">
-                    <van-col span="16" class="font18 bold" style="color:rgb(155, 155, 155)">让阅读成为一种习惯</van-col>
+                    <van-col span="16" class="font18 bold" style="color:rgb(155, 155, 155)">
+                        {{ JWT ? "欢迎" + JWT.userName : "让阅读成为一种习惯 " }}</van-col
+                    >
                     <van-col span="6">
                         <van-row type="flex" justify="space-around">
                             <van-col><van-icon name="search" size="20" @click="toSearch"/></van-col>
-                            <van-col> <van-icon name="apps-o" size="20"/></van-col>
+                            <van-col> <van-icon name="arrow-up" size="20" @click="testUpload"/></van-col>
+                            <van-col> <van-icon name="down" size="20" @click="testDownLoad"/></van-col>
                         </van-row>
                     </van-col>
                 </van-row>
@@ -22,7 +25,7 @@
                     <div
                         :class="['fictionInnerContainer', 'list-complete-item']"
                         v-for="(item, index) in collectedFiction"
-                        :key="item.img"
+                        :key="item.desc"
                         v-show="index > 0"
                     >
                         <Book :curBookInfo="item" @click.native="readBook(item)" />
@@ -38,6 +41,7 @@ import FictionEmpty from "@/components/fiction/fiction_empty";
 import Container from "@/components/common/cell_container";
 import RecentRead from "@/components/fiction/recent_read";
 import InfoBar from "@/components/common/info_bar";
+import { uploadFiction, downloadFiction } from "@/api/user";
 import { mapGetters, mapActions } from "vuex";
 export default {
     components: {
@@ -52,7 +56,7 @@ export default {
         };
     },
     computed: {
-        ...mapGetters(["collectedFiction"]),
+        ...mapGetters(["collectedFiction", "JWT"]),
         hasCollection() {
             //collectedFiction 不为空 才能获取length
             if (!this.collectedFiction) return false;
@@ -64,7 +68,7 @@ export default {
     },
 
     methods: {
-        ...mapActions(["sortCollected", "setCurrentView"]),
+        ...mapActions(["sortCollected", "setCurrentView", "resetCollected"]),
         readBook(book) {
             this.sortCollected(book);
             this.setCurrentView({ ...book, isCollected: true });
@@ -78,6 +82,16 @@ export default {
         },
         toSearch() {
             this.$router.push({ name: "fiction_search" });
+        },
+        testUpload() {
+            uploadFiction({ books: this.collectedFiction }).then(res => {
+                this.$toast(res.msg);
+            });
+        },
+        testDownLoad() {
+            downloadFiction().then(res => {
+                this.resetCollected(res.books);
+            });
         }
     },
     mounted() {

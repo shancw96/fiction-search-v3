@@ -8,7 +8,7 @@
                     <van-col span="6">
                         <van-row type="flex" justify="space-around">
                             <van-col><van-icon name="search" size="20" @click="toSearch"/></van-col>
-                            <van-col> <van-icon name="apps-o" size="20"/></van-col>
+                            <van-col> <van-icon name="apps-o" size="20" @click="testUpload"/></van-col>
                         </van-row>
                     </van-col>
                 </van-row>
@@ -58,6 +58,7 @@
 import Book from "../components/fiction/book";
 import FictionEmpty from "../components/fiction/fiction_empty";
 import Container from "../components/common/cell_container";
+import { uploadFiction } from "../api/user";
 import { mapGetters, mapActions } from "vuex";
 export default {
     components: {
@@ -96,7 +97,14 @@ export default {
             }, 0.4 * 1000);
         },
         toSearch() {
-            this.$router.push({ name: "fiction_search" });
+            console.log("triggle");
+            // this.$router.push({ name: "fiction_search" });
+        },
+        testUpload() {
+            console.log("triggle");
+            uploadFiction({ books: this.collectedFiction }).then(res => {
+                console.log(res);
+            });
         }
     },
     mounted() {

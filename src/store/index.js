@@ -3,6 +3,7 @@ import Vuex from "vuex";
 
 import getters from "./getters";
 import fiction from "./modules/fiction";
+import user from "./modules/user";
 import page from "./modules/pageControl";
 Vue.use(Vuex);
 
@@ -12,6 +13,7 @@ export default new Vuex.Store({
     getters,
     modules: {
         fiction,
-        page
+        page,
+        user
     }
 });

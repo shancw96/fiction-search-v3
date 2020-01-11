@@ -4,9 +4,9 @@ import { findIndex, propEq, find } from "ramda";
 import { Toast } from "vant";
 const fiction = {
     state: {
-        collectedFiction: Storage.get("fiction_collected"),
-        hotSearchList: Storage.get("fiction_hotSearch"),
-        currentView: Storage.get("fiction_currentView")
+        collectedFiction: Storage.get("fiction_collected", []),
+        hotSearchList: Storage.get("fiction_hotSearch", []),
+        currentView: Storage.get("fiction_currentView", {})
     },
     mutations: {
         SET_FICTION_HOT_SEARCH: (state, bookList) => {
@@ -50,6 +50,11 @@ const fiction = {
                 }
                 return fiction;
             });
+            Storage.set("fiction_collected", state.collectedFiction);
+        },
+        RESET_FICTION_COLLECT: (state, array) => {
+            console.log("---RESET_FICTION_COLLECT---");
+            state.collectedFiction = array;
             Storage.set("fiction_collected", state.collectedFiction);
         },
         //将点击的小说放置在头部

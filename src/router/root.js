@@ -14,6 +14,7 @@ const routes = [
         name: "home",
         component: Home
     },
+    //fiction
     {
         path: "/fiction",
         component: () => import("../views/fiction/index.vue"),
@@ -39,6 +40,12 @@ const routes = [
                 component: () => import("../views/fiction/book_content.vue")
             }
         ]
+    },
+    //login
+    {
+        path: "/login",
+        name: "login",
+        component: () => import("../views/login.vue")
     }
 ];
 
