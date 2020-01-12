@@ -1,7 +1,7 @@
 import request from "../../utils/request";
-import Storage from "../../utils/storage";
-const { userName, token } = Storage.get("token", {});
-console.log(token);
+import store from "../store/index";
+const JWT = store.state.user.token;
+
 /**
  * 登录，获取token
  * @param {String} userName
@@ -45,7 +45,7 @@ export const uploadFiction = data =>
         method: "post",
         headers: {
             "Content-Type": "application/json",
-            authorization: token
+            authorization: JWT.token
         },
         url: "user/storeToCloud",
         data
@@ -55,7 +55,7 @@ export const downloadFiction = () => {
         method: "post",
         headers: {
             "Content-Type": "application/json",
-            authorization: token
+            authorization: JWT.token
         },
         url: "user/getFromCloud"
     });
