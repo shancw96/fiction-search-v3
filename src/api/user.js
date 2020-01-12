@@ -1,7 +1,5 @@
 import request from "../../utils/request";
-import store from "../store/index";
-const JWT = store.state.user.token;
-
+//这一步在初始化的时候就已经执行，这时候如果获取的参数是需要异步读取的，那么会是undefined
 /**
  * 登录，获取token
  * @param {String} userName
@@ -40,22 +38,26 @@ export const register = (userName, passwd) =>
         }
     });
 
-export const uploadFiction = data =>
-    request({
-        method: "post",
-        headers: {
-            "Content-Type": "application/json",
-            authorization: JWT.token
-        },
-        url: "user/storeToCloud",
-        data
-    });
-export const downloadFiction = () => {
+export const uploadFiction = data => {
+    const { value: jwt } = JSON.parse(window.localStorage.getItem("token"));
     return request({
         method: "post",
         headers: {
             "Content-Type": "application/json",
-            authorization: JWT.token
+            authorization: jwt.token
+        },
+        url: "user/storeToCloud",
+        data
+    });
+};
+
+export const downloadFiction = () => {
+    const { value: jwt } = JSON.parse(window.localStorage.getItem("token"));
+    return request({
+        method: "post",
+        headers: {
+            "Content-Type": "application/json",
+            authorization: jwt.token
         },
         url: "user/getFromCloud"
     });

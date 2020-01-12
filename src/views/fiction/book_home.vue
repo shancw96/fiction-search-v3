@@ -92,8 +92,7 @@ export default {
     methods: {
         ...mapActions(["insertCollected", "setCurrentView", "setCurrentViewFromCollected"]),
         async addToBookShelf() {
-            let tobeCollected = { ...this.bookInfo };
-            this.insertCollected(tobeCollected);
+            this.insertCollected({ ...this.bookInfo, isCollected: true });
         },
         getHost() {
             return getHostName(this.$route.query.link);
