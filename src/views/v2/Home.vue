@@ -244,8 +244,9 @@ export default {
             }
         },
         async autoUploadFile(period) {
-            if (Date.now() < this.lastestUploadTime + period * 60 * 1000) return;
-            this.testUpload();
+            if (Date.now() > this.lastestUploadTime + period * 60 * 1000 && this.isAutoUpload) {
+                this.testUpload();
+            }
         }
     },
     mounted() {
