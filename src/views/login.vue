@@ -34,7 +34,7 @@ export default {
                 ? await login(this.userName, this.passwd)
                 : await register(this.userName, this.passwd);
 
-            if (this.isLogin) {
+            if (this.isLogin && res.status === "success") {
                 this.setToken({
                     token: res.token,
                     userName: res.data.userName
@@ -43,7 +43,7 @@ export default {
                 !this.collectedFiction.length ? this.resetCollected(res.data.books) : "";
                 this.$router.push({ name: "home" });
             } else {
-                this.$toast("注册成功");
+                this.$toast(res.msg);
                 this.isLogin = true;
             }
         },

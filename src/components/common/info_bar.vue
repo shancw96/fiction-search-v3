@@ -1,17 +1,51 @@
 <template>
     <article>
         <section class="infoBar">
-            <van-icon name="volume" class="info-item" color="green" style="position:absolute;left:-45%;" />
-            <section class="item-container">
+            <van-row span="4" justify="space-around">
+                <van-icon name="volume" class="info-item" color="green" />
+            </van-row>
+            <van-row class="item-container" span="16">
                 <transition-group name="bounce">
-                    <div class="info-item">111</div>
+                    <div class="info-item" v-for="(item, index) in infoList" :key="item" v-show="index == displayIndex">
+                        {{ item }}
+                    </div>
                 </transition-group>
-            </section>
-            <van-icon name="arrow" style="opacity:0" />
+            </van-row>
         </section>
     </article>
 </template>
-<script></script>
+<script>
+export default {
+    props: {
+        infoList: {
+            type: Array,
+            default() {
+                return [""];
+            }
+        }
+    },
+    computed: {
+        displayLen() {
+            return this.infoList.length;
+        }
+    },
+    data() {
+        return {
+            displayTimer: null,
+            displayIndex: 0
+        };
+    },
+    mounted() {
+        this.displayTimer = setInterval(() => {
+            this.displayIndex === this.infoList.length ? (this.displayIndex = 0) : (this.displayIndex += 1);
+        }, 2000 * 1);
+    },
+
+    beforeDestroy() {
+        clearInterval(this.displayTimer);
+    }
+};
+</script>
 <style lang="scss" scoped>
 .infoBar {
     z-index: 999;
@@ -22,20 +56,21 @@
     box-sizing: border-box;
     width: 90vw;
     height: 5vh;
-    border-radius: 20px;
-    padding: 0 10px;
+    padding: 0 2vw;
+    border-radius: 5vw;
     background: #fbfbfb;
     display: flex;
-    justify-content: center;
+    // justify-content: center;
     box-shadow: 2px 2px 2px rgb(236, 236, 236);
 
     .item-container {
         height: 100%;
+        width: 100%;
     }
     .info-item {
         width: 100%;
-        height: 35px;
-        line-height: 35px;
+        height: 5vh;
+        line-height: 5vh;
         text-align: center;
     }
 }

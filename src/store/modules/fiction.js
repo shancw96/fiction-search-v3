@@ -6,7 +6,7 @@ const fiction = {
     state: {
         collectedFiction: Storage.get("fiction_collected", []),
         hotSearchList: Storage.get("fiction_hotSearch", []),
-        currentView: Storage.get("fiction_currentView", {})
+        currentView: Storage.get("fiction_currentView")
     },
     mutations: {
         SET_FICTION_HOT_SEARCH: (state, bookList) => {

@@ -1,6 +1,7 @@
 import request from "../../utils/request";
 import Storage from "../../utils/storage";
-const { userName, token } = Storage.get("token");
+const { userName, token } = Storage.get("token", {});
+console.log(token);
 /**
  * 登录，获取token
  * @param {String} userName
@@ -49,8 +50,8 @@ export const uploadFiction = data =>
         url: "user/storeToCloud",
         data
     });
-export const downloadFiction = () =>
-    request({
+export const downloadFiction = () => {
+    return request({
         method: "post",
         headers: {
             "Content-Type": "application/json",
@@ -58,3 +59,4 @@ export const downloadFiction = () =>
         },
         url: "user/getFromCloud"
     });
+};

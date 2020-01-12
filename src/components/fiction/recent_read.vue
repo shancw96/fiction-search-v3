@@ -7,6 +7,8 @@
                 :curBookInfo="recentReadBook"
                 @click.native="toBookContent"
                 :hasTitle="false"
+                :isEditingBook="isEditingBook"
+                :deleteBook="deleteBook"
         /></van-col>
         <van-col
             span="14"
@@ -30,6 +32,13 @@ export default {
             default() {
                 return {};
             }
+        },
+        isEditingBook: {
+            type: Boolean,
+            default: false
+        },
+        deleteBook: {
+            type: Function
         }
     },
     components: {

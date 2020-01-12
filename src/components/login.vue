@@ -90,7 +90,6 @@ $formBgColor: #fff;
             width: 0px;
             height: 0px;
             border-left: 96vw solid transparent;
-
             border-bottom: 12.5vh solid $formBgColor;
         }
         .photo {

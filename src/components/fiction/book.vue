@@ -1,7 +1,7 @@
 <template>
     <section :style="{ width: imgWidth, height: imgHeight }">
         <section class="myfictionWrapper" :class="[isEditingBook ? 'shaking' : '']">
-            <div :class="['fiction-img', isReadingBook ? 'zoom-book' : '']" @click="animateBook">
+            <div :class="['fiction-img', isReadingBook ? 'zoom-book' : '']">
                 <van-image
                     width="100%"
                     height="100%"
@@ -9,7 +9,7 @@
                 />
             </div>
             <div class="deleteIcon" v-if="isEditingBook">
-                <a-icon type="close-circle" style="font-size:20px;" />
+                <van-icon name="clear" size="20" color="red" @click.stop="removeBook" />
             </div>
             <div v-if="hasTitle" class="myFictionTitle">{{ curBookInfo.title }}</div>
         </section>
@@ -39,6 +39,9 @@ export default {
         isEditingBook: {
             type: Boolean,
             defalut: false
+        },
+        deleteBook: {
+            type: Function
         }
     },
     data() {
@@ -47,13 +50,8 @@ export default {
         };
     },
     methods: {
-        animateBook() {
-            this.isReadingBook = true;
-
-            let timer = setTimeout(() => {
-                this.isReadingBook = false;
-                clearTimeout(timer);
-            }, 1 * 1000);
+        removeBook() {
+            this.deleteBook(this.curBookInfo.title);
         }
     }
 };
