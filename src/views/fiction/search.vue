@@ -86,6 +86,7 @@ export default {
         ...mapActions(["setFictionHotSearch"]),
         onCancel() {
             this.keyword = "";
+            this.$router.push({name:'home'})
         },
 
         dropDownChange(value) {

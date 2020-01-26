@@ -1,4 +1,5 @@
 <template>
+<van-pull-refresh v-model="isPulldown" @refresh="onRefresh">
     <article style="min-height:100vh ">
         <FictionEmpty v-if="!hasCollection" class="bgWhite" />
         <section v-else class="homeContainer">
@@ -90,6 +91,10 @@
                         <!-- 使用 right-icon 插槽来自定义右侧图标 -->
                         <van-switch slot="right-icon" :value="isAutoUpload" @input="toggleAutoUpload" />
                     </van-cell>
+                    <van-cell title="自动更新章节" style="display:flex;align-items:center;">
+                        <!-- 使用 right-icon 插槽来自定义右侧图标 -->
+                        <van-switch slot="right-icon" :value="isAutoUpdateChapter" @input="toggleAutoUpdateChapter" />
+                    </van-cell>
                 </div>
                 <div>
                     <van-button round type="danger" style="width:100%;margin-top:10px" @click="logout"
@@ -99,6 +104,7 @@
             </van-popup>
         </section>
     </article>
+</van-pull-refresh>
 </template>
 <script>
 import Book from "@/components/fiction/book";
@@ -106,6 +112,7 @@ import FictionEmpty from "@/components/fiction/fiction_empty";
 import Container from "@/components/common/cell_container";
 import RecentRead from "@/components/fiction/recent_read";
 import InfoBar from "@/components/common/info_bar";
+import { fetchBookHome, fetchBookChapterList, fetchBookContent } from "@/api/fiction";
 import { uploadFiction, downloadFiction } from "@/api/user";
 import { mapGetters, mapActions } from "vuex";
 
@@ -126,15 +133,15 @@ export default {
             isActiveSideBar: false,
 
             /****page control 代替 */
-
             fontSize: 16,
             activeFontType: "楷体",
-
-            isEditingBooks: false
+            isEditingBooks: false,
+            //dropDown control
+            isPulldown:false
         };
     },
     computed: {
-        ...mapGetters(["collectedFiction", "JWT", "pageControl", "isAutoUpload", "lastestUploadTime"]),
+        ...mapGetters(["collectedFiction", "JWT", "pageControl", "isAutoUpload","lastUpdateChapterTime","isAutoUpdateChapter", "lastestUploadTime"]),
         isAcitveKaiTi() {
             return this.pageControl.fontFamily === "楷体";
         },
@@ -159,8 +166,11 @@ export default {
             "setToken",
             "toggleAutoSave",
             "updateUploadTime",
-            "deleteCollected"
+            "toggleAutoUpdate",
+            "deleteCollected",
+            "updateLastUpdateTime"
         ]),
+
         toggleDeleteBook() {
             this.isEditingBooks = !this.isEditingBooks;
         },
@@ -173,6 +183,10 @@ export default {
         updatePageControl(type, value) {
             this.setPageControl({ ...this.pageControl, [type]: value });
         },
+        toggleAutoUpdateChapter(){
+            this.toggleAutoUpdate(!this.isAutoUpdateChapter)
+        },
+        
         logout() {
             this.setToken({});
             this.$router.push({ name: "login" });
@@ -243,14 +257,68 @@ export default {
                 return true;
             }
         },
-        async autoUploadFile(period) {
+        autoUploadFile(period) {
             if (Date.now() > this.lastestUploadTime + period * 60 * 1000 && this.isAutoUpload) {
                 this.testUpload();
             }
+        },
+        //min
+        autoUpdateChapter(period){
+            if(Date.now() > this.lastUpdateChapterTime + period * 60 * 1000 && this.isAutoUpdateChapter ){
+                this.updateNewChapterLists(this.collectedFiction)
+            }
+        },
+        onRefresh(){
+            this.updateNewChapterLists(this.collectedFiction)
+            this.isPulldown = false
+        },  
+        async updateNewChapterLists(collectedFiction){
+            console.log('start received ')
+            console.log(collectedFiction)
+            const promises = collectedFiction
+                .map(fiction=>createPromise(fiction.chapterListLink))//Object List-> Promise List
+            console.log('create promises lists')
+            console.log(promises)
+            const newFictionsChapterList = await fetchAllChapterPromises(promises)
+            console.log('new chapterLists')
+            console.log(newFictionsChapterList)
+            const [updatedNum,collected] = updateCollectedFiction(newFictionsChapterList)
+            this.resetCollected(collected)
+            console.log('update vuex success;updated num:')
+            console.log(updatedNum)
+            this.$toast(`${updatedNum} 本小说已更新`) // -> alert updated fictions
+            // -> createPromise  String  -> Promise 
+            function createPromise(url){
+                return new Promise((resolve,reject)=>{
+                    fetchBookChapterList(url).then(resolve).catch(reject)
+                })
+            }
+            // -> fetchNewChapterList
+             function fetchAllChapterPromises(promiseList){
+                return  Promise.all(promiseList)
+            }
+            // -> updateCollectedFiction
+            function updateCollectedFiction(newChapterLists){
+                let updatedNum = 0
+                //遍历collectedFiction，比较chapterList length与newChapterLists的某项的length 并且收集已更新的个数
+                const collected = collectedFiction.map((fiction,index)=>{
+                    let tempFiction =fiction
+                    if(fiction.chapterList.length !== newChapterLists[index].length){
+                        console.log('fiction updated')
+                        updatedNum += 1
+                        tempFiction =  {...fiction,chapterList:newChapterLists[index].chapterList}
+                    }
+                    return tempFiction
+                })
+                
+                return [updatedNum,collected]
+            }
+
         }
     },
     mounted() {
         this.autoUploadFile(15);
+        this.autoUpdateChapter(4*60)
     }
 };
 </script>

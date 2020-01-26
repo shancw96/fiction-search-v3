@@ -137,7 +137,7 @@ export default {
             //如果后台没有章节列表链接数据，则从 路由中获取
 
             const chapterList = await fetchBookChapterList(res.chapterList ? res.chapterList : this.$route.query.link);
-            this.bookInfo = { ...res, chapterList, recentRead: chapterList[0] };
+            this.bookInfo = { ...res, chapterList, recentRead: chapterList[0],chapterListLink:res.chapterList ? res.chapterList : this.$route.query.link };
 
             this.setBookView();
 
