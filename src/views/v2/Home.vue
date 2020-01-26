@@ -268,8 +268,8 @@ export default {
                 this.updateNewChapterLists(this.collectedFiction)
             }
         },
-        onRefresh(){
-            this.updateNewChapterLists(this.collectedFiction)
+        async onRefresh(){
+            await this.updateNewChapterLists(this.collectedFiction)
             this.isPulldown = false
         },  
         async updateNewChapterLists(collectedFiction){
