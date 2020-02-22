@@ -19,8 +19,8 @@ export default {
     },
     data() {
         return {
-            userName: "shancw96",
-            passwd: "123",
+            userName: "",
+            passwd: "",
             isLogin: true
         };
     },
