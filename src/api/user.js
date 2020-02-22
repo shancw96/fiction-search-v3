@@ -50,7 +50,24 @@ export const uploadFiction = data => {
         data
     });
 };
-
+export const getTodaysUserInfo = data=>{
+    const { value: jwt } = JSON.parse(window.localStorage.getItem("token"));
+    return request({
+        method: "post",
+        headers: {
+            "Content-Type": "application/json",
+            authorization: jwt.token
+        },
+        url: "file/getTodayLog",
+        data
+    });
+}
+export const notifyOnline = ()=>{
+    return request({
+        method:'get',
+        url:'file/recordLog',
+    })
+}
 export const downloadFiction = () => {
     const { value: jwt } = JSON.parse(window.localStorage.getItem("token"));
     return request({

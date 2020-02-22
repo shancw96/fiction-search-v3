@@ -67,6 +67,7 @@ export default {
         return {
             keyword: "",
             recommandList: [],
+            //更改为从服务器获取
             websiteName: [
                 { text: "全局", value: "all" },
                 { text: "文桑", value: "wensang" },

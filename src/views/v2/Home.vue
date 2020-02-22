@@ -113,7 +113,7 @@ import Container from "@/components/common/cell_container";
 import RecentRead from "@/components/fiction/recent_read";
 import InfoBar from "@/components/common/info_bar";
 import { fetchBookHome, fetchBookChapterList, fetchBookContent } from "@/api/fiction";
-import { uploadFiction, downloadFiction } from "@/api/user";
+import { uploadFiction, downloadFiction,notifyOnline } from "@/api/user";
 import { mapGetters, mapActions } from "vuex";
 
 export default {
@@ -273,19 +273,11 @@ export default {
             this.isPulldown = false
         },  
         async updateNewChapterLists(collectedFiction){
-            console.log('start received ')
-            console.log(collectedFiction)
             const promises = collectedFiction
                 .map(fiction=>createPromise(fiction.chapterListLink))//Object List-> Promise List
-            console.log('create promises lists')
-            console.log(promises)
             const newFictionsChapterList = await fetchAllChapterPromises(promises)
-            console.log('new chapterLists')
-            console.log(newFictionsChapterList)
             const [updatedNum,collected] = updateCollectedFiction(newFictionsChapterList)
             this.resetCollected(collected)
-            console.log('update vuex success;updated num:')
-            console.log(updatedNum)
             this.$toast(`${updatedNum} 本小说已更新`) // -> alert updated fictions
             // -> createPromise  String  -> Promise 
             function createPromise(url){
@@ -314,11 +306,12 @@ export default {
                 return [updatedNum,collected]
             }
 
-        }
+        },
     },
     mounted() {
         this.autoUploadFile(15);
         this.autoUpdateChapter(4*60)
+        notifyOnline().then(res=>console.log(res)).catch(e=>console.log(e))
     }
 };
 </script>
