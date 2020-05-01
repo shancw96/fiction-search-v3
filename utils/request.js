@@ -2,6 +2,7 @@
     封装与服务器端的交互
 */
 import axios from "axios";
+
 const TIMEOUT = 1000 * 20; // 请求timeout: 时间
 
 /**
@@ -9,7 +10,7 @@ const TIMEOUT = 1000 * 20; // 请求timeout: 时间
  * 创建axios实例
  */
 const service = axios.create({
-    baseURL: process.env.BASE_URL, // api的base_url
+    baseURL: 'http://101.133.218.239:4008/', // api的base_url
     timeout: TIMEOUT, // request timeout
     // withCredentials: false, //  跨域安全策略 需要与后台协商
     headers: {
