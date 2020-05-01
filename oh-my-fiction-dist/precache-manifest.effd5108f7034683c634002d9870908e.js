@@ -16,7 +16,7 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "img/common/book_old.jpeg"
   },
   {
-    "revision": "f11915fb0a4391de58a05a43ad8fa35f",
+    "revision": "9a66ff6f116897941d54495558de26ed",
     "url": "index.html"
   },
   {
@@ -28,7 +28,7 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "robots.txt"
   },
   {
-    "revision": "091254d1236278796d8e",
+    "revision": "18e83bbe2bceadd35b26",
     "url": "static/css/app.98a76999.css"
   },
   {
@@ -64,8 +64,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "static/img/book-empty.d23e86c7.jpg"
   },
   {
-    "revision": "091254d1236278796d8e",
-    "url": "static/js/app.be15fdd9.js"
+    "revision": "18e83bbe2bceadd35b26",
+    "url": "static/js/app.14577df2.js"
   },
   {
     "revision": "ce58a0dcbb69e60688cd",
