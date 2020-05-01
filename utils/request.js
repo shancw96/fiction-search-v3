@@ -1,12 +1,7 @@
 /*
     封装与服务器端的交互
 */
-
 import axios from "axios";
-
-// const BASE_URL = process.env.NODE_ENV === "development" ? "http://localhost:4008" : "https://limiaomiao.site";
-const BASE_URL = "https://limiaomiao.site";
-// const BASE_URL = "http://localhost:4008";
 const TIMEOUT = 1000 * 20; // 请求timeout: 时间
 
 /**
@@ -14,7 +9,7 @@ const TIMEOUT = 1000 * 20; // 请求timeout: 时间
  * 创建axios实例
  */
 const service = axios.create({
-    baseURL: BASE_URL, // api的base_url
+    baseURL: process.env.BASE_URL, // api的base_url
     timeout: TIMEOUT, // request timeout
     // withCredentials: false, //  跨域安全策略 需要与后台协商
     headers: {
